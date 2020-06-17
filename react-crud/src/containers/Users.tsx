@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {User} from '../models/User';
 import {UserIndex} from '../components/users/UserIndex';
 import {UserForm} from '../components/users/UserForm';
+import {Dialog} from '../components/Dialog';
 
 export const UsersContainer: React.FC = () => {
   const [users, setUsers] = useState<User[]>([
@@ -14,6 +15,7 @@ export const UsersContainer: React.FC = () => {
 
   const [formKey, setFormKey] = useState(0);
   const [currentUser, setCurrentUser] = useState<User>();
+  const [isDialog, setIsDialog] = useState(false);
 
   const resetForm = () => {
     setCurrentUser(undefined);
@@ -28,7 +30,7 @@ export const UsersContainer: React.FC = () => {
   };
 
   const handleSubmit = (user: User) => {
-    if(currentUser){
+    if (currentUser) {
       // update
       setUsers(users.map((u) => u.id === user.id ? user : u));
     } else {
@@ -37,21 +39,31 @@ export const UsersContainer: React.FC = () => {
     }
     resetForm();
     rerenderForm();
+    toggleDialog();
   };
 
   const handleEdit = (id: number) => {
     setCurrentUser(users.find((u) => u.id === id));
     rerenderForm();
+    toggleDialog();
   };
 
   const handleCancel = () => {
     resetForm();
     rerenderForm();
+    toggleDialog();
+  };
+
+  const toggleDialog = () => {
+    setIsDialog(!isDialog);
   };
 
   return (
       <div>
-        <UserForm onSubmit={handleSubmit} key={formKey} initialUser={currentUser} onCancel={handleCancel}/>
+        <button onClick={toggleDialog}>create user</button>
+        <Dialog open={isDialog}>
+          <UserForm onSubmit={handleSubmit} key={formKey} initialUser={currentUser} onCancel={handleCancel}/>
+        </Dialog>
         <UserIndex users={users} onDelete={handleDelete} onEdit={handleEdit}/>
       </div>
   );
