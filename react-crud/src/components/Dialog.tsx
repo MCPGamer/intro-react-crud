@@ -1,12 +1,10 @@
 import React from 'react';
 import './Dialog.css';
 
-interface Props {
+type Props = {
   open:boolean;
 }
 
-export class Dialog extends React.Component<Props>{
-  public render(){
-    return this.props.open ? <div className='dialog'>{this.props.children}</div> : null;
-  }
-}
+export const Dialog: React.FC<Props> = (props) => {
+    return props.open ? <div className='dialog'>{props.children}</div> : null;
+};
